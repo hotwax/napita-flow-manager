@@ -131,7 +131,7 @@ import { defineComponent } from 'vue';
 import { codeWorkingOutline, ellipsisVerticalOutline, globeOutline, openOutline, timeOutline } from 'ionicons/icons'
 import { mapGetters, useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import TimeZoneModal from '@/components/TimeZoneModal.vue'
+import TimeZoneModal from '@/components/TimezoneModal.vue'
 import { translate } from '@hotwax/dxp-components';
 import { Actions, hasPermission } from '@/authorization'
 import { DateTime } from 'luxon';
