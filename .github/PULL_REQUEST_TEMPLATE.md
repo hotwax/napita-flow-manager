@@ -14,4 +14,4 @@ Closes #
 ### Contribution and Currently Important Rules Acceptance
 <!-- Please get familiar with following info -->
 
-- [ ] I read and followed [contribution rules](https://github.com/hotwax/dxp-components#contribution-guideline)
+- [ ] I read and followed [contribution rules](https://github.com/hotwax/napita-flow-manager#contribution-guideline)

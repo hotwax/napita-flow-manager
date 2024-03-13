@@ -42,7 +42,7 @@
 * Improved code to fix error on login and logout due to empty facility list(#1vy3m1a) by @bashu22tiwari in https://github.com/hotwax/ionic-sdk/pull/9
 * Added title for ionic- SDK by @Utkarshkaraiya in https://github.com/hotwax/ionic-sdk/pull/13
 * Implemented utility to convert Javascript object to csv and download it too. (#1vd3q4u) by @bashu22tiwari in https://github.com/hotwax/ionic-sdk/pull/14
-* Implemented md mode for ionic SDK (#1wmzuzp) by @Utkarshkaraiya in https://github.com/hotwax/ionic-sdk/pull/18
+* Implemented md mode for Napita flow manager (#1wmzuzp) by @Utkarshkaraiya in https://github.com/hotwax/ionic-sdk/pull/18
 * Improved: code to prepare loader on app mounted and assign it to null on dismiss (#1x68xu9) by @Yashi002 in https://github.com/hotwax/ionic-sdk/pull/24
 * Created spacer variables (#1xx0zqn) by @azkyakhan in https://github.com/hotwax/ionic-sdk/pull/25
 * added overline styling in variable.css file (#1xx68a4) by @meet-aniket in https://github.com/hotwax/ionic-sdk/pull/26
