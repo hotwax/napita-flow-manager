@@ -3,7 +3,7 @@
 ## How to use?
 
 - Clone your repository  
-`git clone <your repository url>`
+`git clone https://github.com/hotwax/napita-flow-manager.git`
 
 - Create a new branch
 - Add napita-flow-manager repo URL to remote

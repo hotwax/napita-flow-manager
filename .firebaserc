@@ -7,17 +7,17 @@
     "hotwax-digital-commerce": {
       "hosting": {
         "dev": [
-          "dev-<app-name>"
+          "dev-<napita-flow-manager>"
         ],
         "uat": [
-          "uat-<app-name>"
+          "uat-<napita-flow-manager>"
         ]
       }
     },
     "digital-commerce-71eb8": {
       "hosting": {
         "prod": [
-          "hotwax-<app-name>"
+          "hotwax-<napita-flow-manager>"
         ]
       }
     }
