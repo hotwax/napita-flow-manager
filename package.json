@@ -6,8 +6,6 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
@@ -51,7 +49,6 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0-0",
     "@vue/eslint-config-typescript": "^9.1.0",
-    "@vue/test-utils": "^2.0.0-0",
     "@vue/vue3-jest": "^28.0.0",
     "cypress": "^8.3.0",
     "eslint": "^7.32.0",
