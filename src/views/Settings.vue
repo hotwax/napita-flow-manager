@@ -52,8 +52,7 @@
             {{ translate('A store represents a company or a unique catalog of products. If your OMS is connected to multiple eCommerce stores selling different collections of products, you may have multiple Product Stores set up in HotWax Commerce.') }}
           </ion-card-content>
           <ion-item lines="none">
-            <ion-label> {{ translate("Select store") }} </ion-label>
-            <ion-select interface="popover" :value="currentEComStore.productStoreId" @ionChange="setEComStore($event)">
+            <ion-select interface="popover" :label="translate('Select store')" :value="currentEComStore.productStoreId" @ionChange="setEComStore($event)">
               <ion-select-option v-for="store in (userProfile ? userProfile.stores : [])" :key="store.productStoreId" :value="store.productStoreId" >{{ store.storeName }}</ion-select-option>
             </ion-select>
           </ion-item>
@@ -69,8 +68,7 @@
             {{ translate('Specify which facility you want to operate from. Order, inventory and other configuration data will be specific to the facility you select.') }}
           </ion-card-content>
           <ion-item lines="none">
-            <ion-label>{{ translate("Select facility") }}</ion-label>
-            <ion-select interface="popover" :value="currentFacility?.facilityId" @ionChange="setFacility($event)">
+            <ion-select interface="popover" :label="translate('Select facility')" :value="currentFacility?.facilityId" @ionChange="setFacility($event)">
               <ion-select-option v-for="facility in (userProfile ? userProfile.facilities : [])" :key="facility.facilityId" :value="facility.facilityId" >{{ facility.facilityName }}</ion-select-option>
             </ion-select>
           </ion-item>
