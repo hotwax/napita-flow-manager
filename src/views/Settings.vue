@@ -37,7 +37,6 @@
       </div>
 
       <section>
-        <OmsInstanceNavigator />
 
         <ion-card>
           <ion-card-header>
@@ -97,7 +96,6 @@
           </ion-item>
         </ion-card>
 
-        <LanguageSwitcher />
       </section>
     </ion-content>
   </ion-page>
