@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router';
 import logger from './logger';
 import { showToast } from '@/utils'
+import { createPinia } from "pinia";
 
 import { IonicVue } from '@ionic/vue';
 
@@ -33,6 +34,10 @@ import { dxpComponents } from '@hotwax/dxp-components';
 import { login, logout, loader } from '@/utils/user';
 import { getConfig, initialise, setUserLocale } from './adapter';
 import localeMessages from '@/locales';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate)
 
 const app = createApp(App)
   .use(IonicVue, {
@@ -58,7 +63,8 @@ const app = createApp(App)
     localeMessages,
     setUserLocale,
     showToast
-  });
+  })
+  .use(pinia);
 
 router.isReady().then(() => {
   app.mount('#app');

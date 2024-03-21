@@ -1,16 +1,66 @@
 import { api, client, hasError } from '@/adapter';
 import store from '@/store';
+import { useUserStore } from '@/store/user';
+import { computed } from 'vue';
+import axios from 'axios';
+import { DateTime } from 'luxon';
 
 const login = async (username: string, password: string): Promise <any> => {
-  return api({
-    url: "login", 
-    method: "post",
-    data: {
-      'USERNAME': username, 
-      'PASSWORD': password
-    }
-  });
+  try {
+    const userStore = useUserStore();
+    const baseUrl =  userStore.getBaseUrl;
+    const apiUrl = `${baseUrl}/nifi-api/access/token`;
+    const params = new URLSearchParams();
+    params.append('username', username);
+    params.append('password', password);
+
+    const response = await axios.post(apiUrl, params, {
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    const token = {
+      value: '',
+      expirationTime: ''
+    } as any
+    token.value = JSON.parse(JSON.stringify(response.data));
+    console.log(token.value);
+
+    const fetchExpirationApiUrl = `${baseUrl}/nifi-api/access/token/expiration`;
+    const fetchExpirationTime = await axios.get(fetchExpirationApiUrl,{
+      headers: {
+        'Authorization': `Bearer ${token.value}`,
+      }
+    });
+    token.expirationTime = fetchExpirationTime.data.accessTokenExpiration.expiration
+    token.expirationTime = DateTime.fromISO(token.expirationTime).toMillis()
+    return token;
+    
+  } catch(err) {
+    return Promise.reject("Sorry, login failed. Please try again");
+  }
 }
+
+// const fetchExpirationTime = async (token: any): Promise<any> => {
+//   try {
+//     const userStore = useUserStore();
+//     const baseUrl =  userStore.getBaseUrl;
+//     const apiUrl = `${baseUrl}/nifi-api/access/token/expiration`;
+//     const params = token;
+
+//     const response = await axios.post(apiUrl, params, {
+//       headers: {
+//           'Content-Type': 'text/plain'
+//       }
+//     });
+//     console.log(response);
+//     return response;
+//   } catch(err) {
+//     return Promise.reject("Sorry, login failed. Please try again");
+//   }
+
+// }
 
 const getAvailableTimeZones = async (): Promise <any>  => {
   return api({
