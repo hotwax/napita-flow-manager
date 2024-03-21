@@ -60,7 +60,7 @@
         router.push("/login")
       }
     }).catch(err => err)
-  }
+   }
   </script>
   
   <style scoped>

@@ -21,7 +21,7 @@ export const useUserStore = defineStore('user', {
       return baseURL.startsWith('http') ? baseURL : `https://${baseURL}.hotwax.io`;
     },
     getUserToken(state) {
-      return state.token.value;
+      return state.token;
     }
   },
   actions: {
@@ -30,9 +30,12 @@ export const useUserStore = defineStore('user', {
         if (!username.length || !password.length) {
           return Promise.reject('')
         }
-        const token = await UserService.login(username, password);
-        this.token.value = token.data;
+        this.token.value = await UserService.login(username, password);
+        const token = this.token.value;
         
+        const expirationTime = await UserService.fetchExpirationTime(token);
+        this.token.expirationTime = expirationTime.accessTokenExpiration.expiration
+
       } catch(err){
         return Promise.reject(err)
       }

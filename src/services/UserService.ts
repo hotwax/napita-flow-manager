@@ -19,48 +19,30 @@ const login = async (username: string, password: string): Promise <any> => {
           'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
-
-    const token = {
-      value: '',
-      expirationTime: ''
-    } as any
-    token.value = JSON.parse(JSON.stringify(response.data));
-    console.log(token.value);
-
-    const fetchExpirationApiUrl = `${baseUrl}/nifi-api/access/token/expiration`;
-    const fetchExpirationTime = await axios.get(fetchExpirationApiUrl,{
-      headers: {
-        'Authorization': `Bearer ${token.value}`,
-      }
-    });
-    token.expirationTime = fetchExpirationTime.data.accessTokenExpiration.expiration
-    token.expirationTime = DateTime.fromISO(token.expirationTime).toMillis()
-    return token;
+    return response.data;
     
   } catch(err) {
     return Promise.reject("Sorry, login failed. Please try again");
   }
 }
 
-// const fetchExpirationTime = async (token: any): Promise<any> => {
-//   try {
-//     const userStore = useUserStore();
-//     const baseUrl =  userStore.getBaseUrl;
-//     const apiUrl = `${baseUrl}/nifi-api/access/token/expiration`;
-//     const params = token;
+const fetchExpirationTime = async (token: any): Promise<any> => {
+  try {
+    const userStore = useUserStore();
+    const baseUrl =  userStore.getBaseUrl;
+    const apiUrl = `${baseUrl}/nifi-api/access/token/expiration`;
 
-//     const response = await axios.post(apiUrl, params, {
-//       headers: {
-//           'Content-Type': 'text/plain'
-//       }
-//     });
-//     console.log(response);
-//     return response;
-//   } catch(err) {
-//     return Promise.reject("Sorry, login failed. Please try again");
-//   }
+    const response = await axios.get(apiUrl,{
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response;
+  } catch(err) {
+    return Promise.reject("Sorry, login failed. Please try again");
+  }
 
-// }
+}
 
 const getAvailableTimeZones = async (): Promise <any>  => {
   return api({
@@ -256,6 +238,7 @@ const setUserPreference = async (payload: any): Promise<any> => {
 
 export const UserService = {
     login,
+    fetchExpirationTime,
     getAvailableTimeZones,
     getEComStores,
     getUserProfile,
