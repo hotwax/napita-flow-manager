@@ -4,6 +4,7 @@ import router from './router';
 import logger from './logger';
 import { showToast } from '@/utils'
 import { createPinia } from "pinia";
+import i18n from "./i18n"
 
 import { IonicVue } from '@ionic/vue';
 
@@ -25,15 +26,6 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-
-import store from './store'
-import permissionPlugin from '@/authorization';
-import permissionRules from '@/authorization/Rules';
-import permissionActions from '@/authorization/Actions';
-import { dxpComponents } from '@hotwax/dxp-components'; 
-import { login, logout, loader } from '@/utils/user';
-import { getConfig, initialise, setUserLocale } from './adapter';
-import localeMessages from '@/locales';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const pinia = createPinia();
@@ -47,23 +39,7 @@ const app = createApp(App)
     level: process.env.VUE_APP_DEFAULT_LOG_LEVEL
   })
   .use(router)
-  .use(store)
-  .use(permissionPlugin, {
-    rules: permissionRules,
-    actions: permissionActions
-  })
-  .use(dxpComponents, {
-    defaultImgUrl: require("@/assets/images/defaultImage.png"),
-    login,
-    logout,
-    loader,
-    appLoginUrl: process.env.VUE_APP_LOGIN_URL as string,
-    getConfig,
-    initialise,
-    localeMessages,
-    setUserLocale,
-    showToast
-  })
+  .use(i18n)
   .use(pinia);
 
 router.isReady().then(() => {

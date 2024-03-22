@@ -1,7 +1,7 @@
-<template>
+<!-- <template>
   <ion-app>
     <ion-split-pane content-id="main-content" when="lg">
-      <Menu />
+      <Tabs />
       <ion-router-outlet id="main-content" />
     </ion-split-pane>
   </ion-app>
@@ -10,11 +10,10 @@
 <script lang="ts">
 import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import Menu from '@/components/Menu.vue';
+import Tabs from '@/components/Tabs.vue';
 import { loadingController } from '@ionic/vue';
 import emitter from "@/event-bus";
 import { mapGetters, useStore } from 'vuex';
-import { initialise, resetConfig } from '@/adapter'
 import { useRouter } from 'vue-router';
 import { Settings } from 'luxon'
 import { translate } from '@hotwax/dxp-components';
@@ -25,7 +24,7 @@ export default defineComponent({
     IonApp,
     IonRouterOutlet,
     IonSplitPane,
-    Menu
+    Tabs
   },
   data() {
     return {
@@ -121,4 +120,60 @@ export default defineComponent({
 ion-split-pane {
   --side-width: 304px;
 }
-</style>
+</style> -->
+
+<template>
+  <ion-app>
+    <ion-router-outlet />
+  </ion-app>
+</template>
+
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import { IonApp, IonRouterOutlet, loadingController } from "@ionic/vue";
+import emitter from "@/event-bus"
+import { translate } from "@/i18n"
+import { useRouter } from "vue-router";
+
+const loader = ref(null) as any
+//const userProfile = computed(() => store.getters["user/getUserProfile"])
+const router = useRouter();
+
+async function presentLoader(options = { message: "Click the backdrop to dismiss.", backdropDismiss: true }) {
+  // When having a custom message remove already existing loader, if not removed it takes into account the already existing loader
+  if(options.message && loader.value) dismissLoader();
+
+  if (!loader.value) {
+    loader.value = await loadingController
+      .create({
+        message: translate(options.message),
+        translucent: true,
+        backdropDismiss: options.backdropDismiss
+      });
+  }
+  loader.value.present();
+}
+
+function dismissLoader() {
+  if (loader.value) {
+    loader.value.dismiss();
+    loader.value = null as any;
+  }
+}
+
+onMounted(async () => {
+  loader.value = await loadingController
+    .create({
+      message: translate("Click the backdrop to dismiss."),
+      translucent: true,
+      backdropDismiss: true
+    });
+  emitter.on("presentLoader", presentLoader);
+  emitter.on("dismissLoader", dismissLoader);
+})
+
+onUnmounted(() => {
+  emitter.off("presentLoader", presentLoader);
+  emitter.off("dismissLoader", dismissLoader);
+})
+</script>

@@ -34,10 +34,9 @@
   } from "@ionic/vue";
   import { computed, onMounted, ref } from "vue";
   import { useRouter } from "vue-router";
-  import store from "@/store";
   import { useUserStore } from '@/store/user';
-  import { translate } from "@hotwax/dxp-components";
-
+  import { translate } from "../i18n";
+  
   const username = ref("")
   const password = ref("")
   const instanceUrl = ref("")
@@ -54,10 +53,10 @@
   function login() {
     userStore.setUserInstanceUrl(instanceUrl.value.trim());
     userStore.login( username.value.trim(), password.value ).then((data: any) => {
-      if (data.token) {
+      if (data) {
         username.value = ""
         password.value = ""
-        router.push("/login")
+        router.push("/")
       }
     }).catch(err => err)
    }

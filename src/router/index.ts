@@ -1,13 +1,12 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import Settings from "@/views/Settings.vue"
-import store from '@/store'
-import { hasPermission } from '@/authorization';
+import { useUserStore } from '@/store/user';
 import { showToast } from '@/utils'
 import 'vue-router'
 import { useAuthStore, translate } from '@hotwax/dxp-components'
-import { loader, login } from '@/utils/user';
 import Login from "@/views/Login.vue"
+import { computed } from 'vue';
 
 // Defining types for the meta values
 declare module 'vue-router' {
@@ -28,18 +27,39 @@ declare module 'vue-router' {
 //   next()
 // };
 
-const loginGuard = (to: any, from: any, next: any) => {
-  const authStore = useAuthStore()
-  if (authStore.isAuthenticated && !to.query?.token && !to.query?.oms) {
-    next('/')
-  }
-  next();
-};
-// const loginGuard = () => {
+// const loginGuard = (to: any, from: any, next: any) => {
+//   const authStore = useAuthStore()
+//   if (authStore.isAuthenticated && !to.query?.token && !to.query?.oms) {
+//     next('/')
+//   }
+//   next();
+// };
+// const authGuard = (to: any, from: any, next: any) => {
+//   if (store.getters["user/isAuthenticated"]) {
+//     next()
+//   } else {
+//     next("/login")
+//   }
+// };
 
-// }
+const loginGuard = (to: any, from: any, next: any) => {
+  console.log("oming here or not");
+  
+  const userStore = useUserStore()
+  if (!userStore.isAuthenticated) {
+    next()
+  } else {
+    next("/")
+  }
+};
 const authGuard = (to: any, from: any, next: any) => {
-  if (store.getters["user/isAuthenticated"]) {
+  console.info('======================================')
+  const userStore = useUserStore()
+  
+  const isAuthenticated = computed(() => userStore.isAuthenticated)
+  console.log(isAuthenticated);
+  
+  if (userStore.isAuthenticated) {
     next()
   } else {
     next("/login")
@@ -63,7 +83,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "Settings",
     component: Settings,
     beforeEnter: authGuard
-  }
+  },
 ]
 
 const router = createRouter({
@@ -71,16 +91,8 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from) => {
-  if (to.meta.permissionId && !hasPermission(to.meta.permissionId)) {
-    let redirectToPath = from.path;
-    // If the user has navigated from Login page or if it is page load, redirect user to settings page without showing any toast
-    if (redirectToPath == "/login" || redirectToPath == "/") redirectToPath = "/settings";
-    else showToast(translate('You do not have permission to access this page'));
-    return {
-      path: redirectToPath,
-    }
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   authGuard(to, from, next); 
+// });
 
 export default router
