@@ -1,6 +1,5 @@
 import { useUserStore } from '@/store/user';
-import axios from 'axios';
-import { client } from "@/api"
+import api, { client } from "@/api"
 
 const login = async (username: string, password: string): Promise<any> => {
   const userStore = useUserStore();
@@ -26,42 +25,16 @@ const login = async (username: string, password: string): Promise<any> => {
   }
 }
 
-const fetchExpirationTime = async (token: any): Promise<any> => {
-  // try {
-  //     console.log("expire");
-  //   const userStore = useUserStore();
-  //   const baseUrl = userStore.getBaseUrl;
-  //   const apiUrl = `https://${baseUrl}.hotwax.io/nifi-api/access/token/expiration`;
-    
-  //   const response = await axios.get(apiUrl, {
-  //     headers: {
-  //       'Authorization': `Bearer ${token}`
-  //     }
-  //   });
-  //   return response;
-  // } catch (err) {
-  //   return Promise.reject("Sorry, login failed. Please try again");
-  // }
-
+const fetchExpirationTime = async (): Promise<any> => {
   const userStore = useUserStore();
   const baseURL = userStore.getBaseUrl;
 
   try {
-    const resp = await client({
+    const resp = await api({
       url: "access/token/expiration",
       method: "get",
       baseURL,
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }) as any;
-    // if (!hasError(resp) && resp) {
-    //   expirationTimeDetails = resp
-    // } else {
-    //   throw "Sorry, login failed. Please try again";
-    // }
-    console.log(resp);
-    
+    }) as any;  
     return Promise.resolve(resp);
   } catch (err) {
     return Promise.reject("Sorry, login failed. Please try again");
@@ -69,24 +42,16 @@ const fetchExpirationTime = async (token: any): Promise<any> => {
 
 }
 
-const logout = async (token: any): Promise<any> => {
-  const userStore = useUserStore();
-  const baseURL = userStore.getBaseUrl;
-  let response = ''
+const logout = async (): Promise<any> => {
   try {
-    const resp = await client({
+    const resp = await api({
       url: "access/logout",
       method: "delete",
-      baseURL,
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
     }) as any;
-    response = resp;
+    return Promise.resolve(resp);
   } catch (err) {
     return Promise.reject("Sorry, logout failed. Please try again");
   }
-  return response;
 }
 
 export const UserService = {

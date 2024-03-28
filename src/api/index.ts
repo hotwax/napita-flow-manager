@@ -6,18 +6,16 @@ import { StatusCodes } from "http-status-codes";
 import router from "@/router"
 import { useUserStore } from '@/store/user';
 
-// axios.interceptors.request.use((config: any) => {
-//   // TODO: pass csrf token
-//   // const token = store.getters["user/getUserToken"];
-//   const userStore = useUserStore();
-//   const token =  userStore.getUserToken;
-//   if (token) {
-//     config.headers["api_key"] =  token;
-//     config.headers["Content-Type"] = "application/json";
-//   }
+axios.interceptors.request.use((config: any) => {
+  const userStore = useUserStore();
+  const token =  userStore.getUserToken;
+  if (token.value) {
+    config.headers["Authorization"] = 'Bearer ' + token.value;
+    config.headers["Content-Type"] = "application/json";
+  }
 
-//   return config;
-// });
+  return config;
+});
 
 // TODO: need to update this as per the changes in the Moqui response format, if required.
 axios.interceptors.response.use(function (response) {
@@ -90,7 +88,7 @@ const api = async (customConfig: any) => {
 
   const userStore = useUserStore();
   const baseURL = userStore.getBaseUrl;
-  if (baseURL) config.baseURL = `https://${baseURL}.hotwax.io/nifi-api`;
+  if (baseURL) config.baseURL = baseURL;
   if(customConfig.cache) config.adapter = axiosCache.adapter;
   const networkStatus =  await OfflineHelper.getNetworkStatus();
   if (customConfig.queue && !networkStatus.connected) {
@@ -99,7 +97,7 @@ const api = async (customConfig: any) => {
       callbackEvent: customConfig.callbackEvent,
       payload: config
     });
-  } else {
+    } else {
       return axios(config);
   }
 }

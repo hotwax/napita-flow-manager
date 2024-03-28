@@ -27,13 +27,10 @@ export const useUserStore = defineStore('user', {
     isAuthenticated(state) {
       let isTokenExpired = false
       
-      if (state.token.expirationTime) {
-        console.log(state.token.expirationTime);
+      if (state.token.expirationTime ) {
         const currTime = DateTime.now().toMillis()
         isTokenExpired = state.token.expirationTime < currTime
       }
-      console.log(state.token.value, !isTokenExpired);
-      
       return state.token.value && !isTokenExpired
     }
   },
@@ -45,15 +42,13 @@ export const useUserStore = defineStore('user', {
         }
 
         const token = await UserService.login(username, password);
-        console.log(token);
- 
+
         this.token.value = token;
       
-        const expirationTimeDetails = await UserService.fetchExpirationTime(token);
+        const expirationTimeDetails = await UserService.fetchExpirationTime();
     
         const expirationDateTime = DateTime.fromISO(expirationTimeDetails.data.accessTokenExpiration.expiration).toMillis();
-        console.log(expirationDateTime);
-        
+
         this.token.expirationTime = expirationDateTime;
         
         return Promise.resolve(token)
@@ -65,13 +60,17 @@ export const useUserStore = defineStore('user', {
     async setUserInstanceUrl(instanceUrl: string) {
       this.instanceUrl = instanceUrl;
     },
-    async logout()
-    {
-      const token = this.token.value;
-      this.token.value = ''
-      const logtut1 = await UserService.logout(token);
-      console.log(logtut1);
-    
+    async logout() { 
+      try {
+        await UserService.logout();
+        this.token.value = '';
+        this.token.expirationTime = '';
+        this.instanceUrl = '';
+        return Promise.resolve(); 
+      } catch (err) {
+        console.error('Error logging out:', err);
+        return Promise.reject(err);
+      }
     }
   },
   persist: true,

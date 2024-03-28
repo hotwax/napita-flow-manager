@@ -33,12 +33,10 @@
 
 <script setup lang="ts">
 import { IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonItem, IonMenuButton, IonPage, IonTitle, IonToolbar } from "@ionic/vue";
-import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { translate } from "@/i18n"
 import { useUserStore } from '@/store/user';
 
-const store = useStore()
 const router = useRouter()
 const userStore = useUserStore();
 

@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { translate } from "./i18n";
+import { translate } from "../i18n";
 import { IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/vue";
 import { settingsOutline } from "ionicons/icons";
 import { useRouter } from "vue-router";

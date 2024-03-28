@@ -1,7 +1,6 @@
 import { translate } from '@hotwax/dxp-components';
 import { Plugins } from '@capacitor/core';
 import { toastController } from '@ionic/vue';
-import { DateTime } from 'luxon';
 
 // TODO Use separate files for specific utilities
 
