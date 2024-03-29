@@ -9,12 +9,8 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { IonApp, IonRouterOutlet, loadingController } from "@ionic/vue";
 import emitter from "@/event-bus"
 import { translate } from "@/i18n"
-import { useRouter } from "vue-router";
 
 const loader = ref(null) as any
-//const userProfile = computed(() => store.getters["user/getUserProfile"])
-const router = useRouter();
-
 async function presentLoader(options = { message: "Click the backdrop to dismiss.", backdropDismiss: true }) {
   // When having a custom message remove already existing loader, if not removed it takes into account the already existing loader
   if(options.message && loader.value) dismissLoader();

@@ -7,7 +7,6 @@ const login = async (username: string, password: string): Promise<any> => {
   const params = new URLSearchParams();
   params.append('username', username);
   params.append('password', password);
-  //let token = ""
   try {
     const resp = await client({
       url: "access/token",

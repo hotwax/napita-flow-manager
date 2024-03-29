@@ -46,16 +46,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "Settings",
     component: Settings,
     beforeEnter: authGuard
-  },
+  }
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
-
-// router.beforeEach((to, from, next) => {
-//   authGuard(to, from, next); 
-// });
 
 export default router
