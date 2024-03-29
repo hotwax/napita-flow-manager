@@ -39,7 +39,6 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Login',
     component: Login,
     beforeEnter: loginGuard
-
   },
   {
     path: "/settings",
