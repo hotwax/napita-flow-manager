@@ -97,8 +97,8 @@ const api = async (customConfig: any) => {
       callbackEvent: customConfig.callbackEvent,
       payload: config
     });
-    } else {
-      return axios(config);
+  } else {
+    return axios(config);
   }
 }
 

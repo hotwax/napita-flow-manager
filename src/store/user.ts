@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
 import { UserService } from "@/services/UserService"
 import { DateTime } from 'luxon';
+import logger from '../logger';
 
 export const useUserStore = defineStore('user', {
   state: () => {
     return {
-      instanceUrl: "",
+      instanceUrl: '',
       token: {
         value: '',
         expirationTime: ''
@@ -68,7 +69,7 @@ export const useUserStore = defineStore('user', {
         this.instanceUrl = '';
         return Promise.resolve(); 
       } catch (err) {
-        console.error('Error logging out:', err);
+        logger.error('Error logging out:', err);
         return Promise.reject(err);
       }
     }
