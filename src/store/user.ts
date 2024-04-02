@@ -68,6 +68,7 @@ export const useUserStore = defineStore('user', {
       this.instanceUrl = instanceUrl;
     },
     async logout() { 
+      emitter.emit('presentLoader', { message: 'Logging out', backdropDismiss: false })
       try {
         await UserService.logout();
         this.token.value = '';
