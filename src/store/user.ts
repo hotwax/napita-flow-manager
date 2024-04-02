@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { UserService } from "@/services/UserService"
 import { DateTime } from 'luxon';
 import logger from '../logger';
-import emitter from '@/event-bus'
 
 export const useUserStore = defineStore('user', {
   state: () => {

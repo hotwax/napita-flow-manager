@@ -30,7 +30,7 @@ import {
   IonItem,
   IonPage
 } from "@ionic/vue";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from '@/store/user';
 import { translate } from "../i18n";

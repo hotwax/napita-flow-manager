@@ -1,6 +1,5 @@
 import { useUserStore } from '@/store/user';
 import api, { client } from "@/api"
-import { DateTime } from 'luxon';
 
 const login = async (username: string, password: string): Promise<any> => {
   const userStore = useUserStore();
