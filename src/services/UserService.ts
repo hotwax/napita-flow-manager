@@ -1,5 +1,6 @@
 import { useUserStore } from '@/store/user';
 import api, { client } from "@/api"
+import { DateTime } from 'luxon';
 
 const login = async (username: string, password: string): Promise<any> => {
   const userStore = useUserStore();
@@ -27,7 +28,6 @@ const login = async (username: string, password: string): Promise<any> => {
 const fetchExpirationTime = async (): Promise<any> => {
   const userStore = useUserStore();
   const baseURL = userStore.getBaseUrl;
-
   try {
     const resp = await api({
       url: "access/token/expiration",
@@ -36,9 +36,8 @@ const fetchExpirationTime = async (): Promise<any> => {
     }) as any;  
     return Promise.resolve(resp);
   } catch (err) {
-    return Promise.reject("Sorry, login failed. Please try again");
+    return Promise.resolve({});
   }
-
 }
 
 const logout = async (): Promise<any> => {
