@@ -34,6 +34,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from '@/store/user';
 import { translate } from "../i18n";
+import emitter from '@/event-bus'
 
 const username = ref("")
 const password = ref("")
@@ -44,11 +45,10 @@ const userStore = useUserStore();
 
 const getInstanceUrl = () => userStore.getInstanceUrl;
 
-onMounted(() => {
-  instanceUrl.value = getInstanceUrl();
-})
+instanceUrl.value = getInstanceUrl();
 
 function login() {
+  emitter.emit('presentLoader', { message: 'Logging in', backdropDismiss: false })
   userStore.setUserInstanceUrl(instanceUrl.value.trim());
   userStore.login( username.value.trim(), password.value ).then((data: any) => {
     if (data) {
@@ -56,8 +56,9 @@ function login() {
       password.value = ""
       router.push("/")
     }
+    emitter.emit('dismissLoader')
   }).catch(err => err)
-  }
+}
 </script>
 
 <style scoped>

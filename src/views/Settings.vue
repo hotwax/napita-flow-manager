@@ -29,14 +29,17 @@ import { IonButton, IonCard, IonCardHeader, IonCardTitle, IonContent, IonHeader,
 import { useRouter } from "vue-router";
 import { translate } from "@/i18n"
 import { useUserStore } from '@/store/user';
+import emitter from '@/event-bus'
 
 const router = useRouter()
 const userStore = useUserStore();
 const username = userStore.getUserName
 
 function logout() {
+  emitter.emit('presentLoader', { message: 'Logging out', backdropDismiss: false })
   userStore.logout().then(() => {
     router.push("/login");
+    emitter.emit('dismissLoader')
   })
 }
 </script>
