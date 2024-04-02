@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { UserService } from "@/services/UserService"
 import { DateTime } from 'luxon';
 import logger from '../logger';
+import emitter from '@/event-bus'
 
 export const useUserStore = defineStore('user', {
   state: () => {
@@ -41,7 +42,8 @@ export const useUserStore = defineStore('user', {
   },
   actions: {
     async login(username: string, password: string) {
-    
+      emitter.emit('presentLoader', { message: 'Logging out', backdropDismiss: false })
+
       try {
         if (!username.length || !password.length) {
           return Promise.reject('')
@@ -55,8 +57,10 @@ export const useUserStore = defineStore('user', {
           const expirationDateTime = DateTime.fromISO(expirationTimeDetails.data.accessTokenExpiration.expiration).toMillis();
           this.token.expirationTime = expirationDateTime;
         }
+        emitter.emit('dismissLoader')
         return Promise.resolve(token)
       } catch (err) {
+        emitter.emit('dismissLoader')
         return Promise.reject(err)
       }
     },
@@ -69,8 +73,10 @@ export const useUserStore = defineStore('user', {
         this.token.value = '';
         this.token.expirationTime = '';
         this.instanceUrl = '';
+        emitter.emit('dismissLoader')
         return Promise.resolve(); 
       } catch (err) {
+        emitter.emit('dismissLoader')
         logger.error('Error logging out:', err);
         return Promise.reject(err);
       }
