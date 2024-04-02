@@ -30,7 +30,7 @@ import {
   IonItem,
   IonPage
 } from "@ionic/vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from '@/store/user';
 import { translate } from "../i18n";
@@ -45,7 +45,9 @@ const userStore = useUserStore();
 
 const getInstanceUrl = () => userStore.getInstanceUrl;
 
-instanceUrl.value = getInstanceUrl();
+onMounted(() => {
+  instanceUrl.value = getInstanceUrl();
+})
 
 function login() {
   emitter.emit('presentLoader', { message: 'Logging in', backdropDismiss: false })
