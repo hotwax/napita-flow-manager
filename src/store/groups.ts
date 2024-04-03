@@ -32,17 +32,18 @@ export const useGroupStore = defineStore('groups', {
     async fetchProcessGroups() {
       try{
         const resp = await GroupService.fetchProcessGroups();
-        const processGroupDetails = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
-          id: group.id,
-          name: group.component.name,
-          runningCount: group.runningCount,
-          stoppedCount: group.stoppedCount,
-          invalidCount: group.invalidCount,
-          disabledCount: group.disabledCount,
-          inputPortCount: group.inputPortCount,
-          outputPortCount: group.outputPortCount
-        }));
         if (!hasError(resp) && resp.data) {
+          const processGroupDetails = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
+            id: group.id,
+            name: group.component.name,
+            runningCount: group.runningCount,
+            stoppedCount: group.stoppedCount,
+            invalidCount: group.invalidCount,
+            disabledCount: group.disabledCount,
+            inputPortCount: group.inputPortCount,
+            outputPortCount: group.outputPortCount
+          }));
+          
           this.processGroups = processGroupDetails;
         } else {
           throw resp.data
@@ -54,24 +55,24 @@ export const useGroupStore = defineStore('groups', {
     async fetchProcessByGroups(id: any) {
       try{
         const resp = await GroupService.fetchProcessByGroups(id);
-        const processGroupDetails = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
-          id: group.id,
-          name: group.component.name,
-          runningCount: group.runningCount,
-          stoppedCount: group.stoppedCount,
-          invalidCount: group.invalidCount,
-          disabledCount: group.disabledCount,
-          inputPortCount: group.inputPortCount,
-          outputPortCount: group.outputPortCount
-        }));
-        //storing processes in state
-        const processGroupConnection = resp.data.processGroupFlow.flow.connections.map((group: any) => ({
-          sourceId: group.component.source.groupId,
-          destinationId: group.component.destination.groupId
-        }));
         if (!hasError(resp) && resp.data) {
-          this.currentGroupProcesses.processes = processGroupDetails; //storing processes in state
-          this.currentGroupProcesses.connections = processGroupConnection; //storing connections in state
+          const processes = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
+            id: group.id,
+            name: group.component.name,
+            runningCount: group.runningCount,
+            stoppedCount: group.stoppedCount,
+            invalidCount: group.invalidCount,
+            disabledCount: group.disabledCount,
+            inputPortCount: group.inputPortCount,
+            outputPortCount: group.outputPortCount
+          }));
+
+          const connections = resp.data.processGroupFlow.flow.connections.map((group: any) => ({
+            sourceId: group.component.source.groupId,
+            destinationId: group.component.destination.groupId
+          }));
+          this.currentGroupProcesses.processes = processes;
+          this.currentGroupProcesses.connections = connections;
         } else {
           throw resp.data
         }

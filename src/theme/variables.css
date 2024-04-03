@@ -95,10 +95,6 @@ http://ionicframework.com/docs/theming/ */
   padding: 10px;
 }
 
-.empty-state > img {
-  object-fit: contain;
-}
-
 .empty-state > p {
   text-align: center;
 }
@@ -285,10 +281,6 @@ http://ionicframework.com/docs/theming/ */
                        "main";
 }
 
-.group > .filters{
-  display: none;
-}
-
 .group > main {
   grid-area: main;
 }
@@ -300,10 +292,6 @@ http://ionicframework.com/docs/theming/ */
   align-items: center;
   justify-content: center;
   padding: 10px;
-}
-
-.empty-state > img {
-  object-fit: contain;
 }
 
 .empty-state > p {
@@ -334,19 +322,7 @@ http://ionicframework.com/docs/theming/ */
     margin: var(--spacer-lg);
   }
 
-  .filters {
-    margin-top: var(--spacer-lg);
-  }
-
-  .filters {
-    margin-top: var(--spacer-lg);
-  }
-
-  .group > .filters{
-    display: unset;
-  }
-
-  .desktop-only {
+   .desktop-only {
     display: unset;
   }
 
