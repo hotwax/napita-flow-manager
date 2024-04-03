@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { GroupService } from "@/services/GroupService"
+import logger from "@/logger";
+import { hasError } from "@/utils"
 
 export const useGroupStore = defineStore('groups', {
   state: () => {
@@ -28,43 +30,56 @@ export const useGroupStore = defineStore('groups', {
   },
   actions: {
     async fetchProcessGroups() {
-      const processGroups = await GroupService.fetchProcessGroups();
-      const processGroupDetails = processGroups.data.processGroupFlow.flow.processGroups.map((group: any) => ({
-        id: group.id,
-        name: group.component.name,
-        runningCount: group.runningCount,
-        stoppedCount: group.stoppedCount,
-        invalidCount: group.invalidCount,
-        disabledCount: group.disabledCount,
-        inputPortCount: group.inputPortCount,
-        outputPortCount: group.outputPortCount
-      }));
-      this.processGroups = processGroupDetails;
-      return Promise.resolve(processGroups);
+      try{
+        const resp = await GroupService.fetchProcessGroups();
+        const processGroupDetails = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
+          id: group.id,
+          name: group.component.name,
+          runningCount: group.runningCount,
+          stoppedCount: group.stoppedCount,
+          invalidCount: group.invalidCount,
+          disabledCount: group.disabledCount,
+          inputPortCount: group.inputPortCount,
+          outputPortCount: group.outputPortCount
+        }));
+        if (!hasError(resp) && resp.data) {
+          this.processGroups = processGroupDetails;
+        } else {
+          throw resp.data
+        }
+      } catch (error) {
+        logger.error(error)
+      }
     },
     async fetchProcessByGroups(id: any) {
-      const processesByGroups = await GroupService.fetchProcessByGroups(id);
-      const processGroupDetails = processesByGroups.data.processGroupFlow.flow.processGroups.map((group: any) => ({
-        id: group.id,
-        name: group.component.name,
-        runningCount: group.runningCount,
-        stoppedCount: group.stoppedCount,
-        invalidCount: group.invalidCount,
-        disabledCount: group.disabledCount,
-        inputPortCount: group.inputPortCount,
-        outputPortCount: group.outputPortCount
-      }));
-      //storing processes in state
-      this.currentGroupProcesses.processes = processGroupDetails;
-
-      const processGroupConnection = processesByGroups.data.processGroupFlow.flow.connections.map((group: any) => ({
-        sourceId: group.component.source.groupId,
-        destinationId: group.component.destination.groupId
-      }));
-      //storing connections in state
-      this.currentGroupProcesses.connections = processGroupConnection
+      try{
+        const resp = await GroupService.fetchProcessByGroups(id);
+        const processGroupDetails = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
+          id: group.id,
+          name: group.component.name,
+          runningCount: group.runningCount,
+          stoppedCount: group.stoppedCount,
+          invalidCount: group.invalidCount,
+          disabledCount: group.disabledCount,
+          inputPortCount: group.inputPortCount,
+          outputPortCount: group.outputPortCount
+        }));
+        //storing processes in state
+        const processGroupConnection = resp.data.processGroupFlow.flow.connections.map((group: any) => ({
+          sourceId: group.component.source.groupId,
+          destinationId: group.component.destination.groupId
+        }));
+        if (!hasError(resp) && resp.data) {
+          this.currentGroupProcesses.processes = processGroupDetails; //storing processes in state
+          this.currentGroupProcesses.connections = processGroupConnection; //storing connections in state
+        } else {
+          throw resp.data
+        }
+      } catch (error) {
+        logger.error(error)
+      }
     },
-    setCurrentProcessGroup(processGroup: any) {
+    setcurrentProcessGroup(processGroup: any) {
       this.currentGroup = processGroup;
     },
   },

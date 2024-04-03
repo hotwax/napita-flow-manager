@@ -3,9 +3,9 @@
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="group" href="/tabs/group">
+        <ion-tab-button tab="groups" href="/tabs/groups">
           <ion-icon :icon="albumsOutline" />
-          <ion-label>{{ translate("Group") }}</ion-label>
+          <ion-label>{{ translate("Groups") }}</ion-label>
         </ion-tab-button>
         <ion-tab-button tab="settings" href="/tabs/settings">
           <ion-icon :icon="settingsOutline" />
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { translate } from "../i18n";
+import { translate } from "@/i18n";
 import { IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/vue";
 import { albumsOutline, settingsOutline } from "ionicons/icons";
 
