@@ -21,19 +21,6 @@ axios.interceptors.request.use((config: any) => {
 axios.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
-
-  // TODO: explore more on a secure way to store the csrf token
-  // Cannot store it in cookies or localStorage as its not safe
-  // https://stackoverflow.com/questions/67062876/is-it-secure-to-store-a-csrf-token-value-in-the-dom
-  // https://stackoverflow.com/questions/62289684/what-is-the-correct-way-for-a-client-to-store-a-csrf-token
-  const csrfToken = response.headers["x-csrf-token"]
-  const meta = document.createElement("meta")
-  meta.name = "csrf"
-  meta.content = csrfToken
-  document.getElementsByTagName("head")[0].appendChild(meta)
-
-  document.cookie = `x-csrf-token=${csrfToken}`
-
   return response;
 }, function (error) {
   // TODO Handle it in a better way
