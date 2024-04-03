@@ -11,6 +11,7 @@ const FetchProcessGroups = async (root: any): Promise<any> => {
       url: `flow/process-groups/${root}`,
       method: "get",
       baseURL,
+      cache: true
     }) as any;
     const processGroupDetails = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
           id: group.id,
@@ -70,6 +71,7 @@ const FetchProcessByGroups = async (root: any): Promise<any> => {
       url: `flow/process-groups/${root}`,
       method: "get",
       baseURL,
+      cache: true
     }) as any;
     const processGroupDetails = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
           id: group.id,

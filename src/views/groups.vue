@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header @ionViewWillEnter="fetchProcessGroupData" :translucent="true">
+    <ion-header :translucent="true">
       <ion-toolbar>
         <ion-menu-button slot="start" />
         <ion-title>Napita Flow Manager</ion-title>
@@ -20,7 +20,6 @@
             </ion-item>
           </ion-list>
         </aside>
-
         <main v-if="CurrentProcessGroup?.id">
           <div>
             <ion-item lines="none">
@@ -30,7 +29,8 @@
               </ion-label>
             </ion-item>
           </div>
-          <div>
+          <hr />
+          <div v-if="currentProcessBygroupDetail.length > 0">
             <ion-accordion-group>
               <ion-radio-group >
                 <ion-accordion v-for="(process, index) in currentProcessBygroupDetail" :key="index" >
@@ -39,24 +39,21 @@
                       {{ process.name }}
                     </ion-label>
                   </ion-item>
-                  <div class="ion-padding" slot="content">
-                    
-                  </div>
                 </ion-accordion>
               </ion-radio-group>
             </ion-accordion-group>
           </div>
+          <div v-else class="empty-state" >
+            <p>No process found for {{ CurrentProcessGroup.name }} .</p>
+          </div>
         </main>
-        <!-- <main v-else class="empty-state">
-          <p>{{ "Select a process group to view its details" }}</p>
-        </main> -->
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, onIonViewWillEnter, IonButton } from "@ionic/vue";
+import { IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, onIonViewWillEnter } from "@ionic/vue";
 import { translate } from "../i18n"
 import { useGroupStore } from '../store/groups';
 import { computed, ref } from "vue";
@@ -67,13 +64,12 @@ const currentProcessBygroupDetail = computed(() => groupStore.getProcessByGroups
 CurrentProcessGroup = computed(() => groupStore.getCurrentProcessGroup);
 const processGroups = groupStore.getProcessGroups;
 
-function fetchProcessGroups() {
-  return groupStore.fetchProcessGroups();
+async function fetchProcessGroups() {
+  await groupStore.fetchProcessGroups();
 }
 
 async function fetchProcessByGroups(groupId: string) {
   await groupStore.fetchProcessByGroups(groupId);
-
 }
 
 async function onProcessGroupChange(group: any) {
@@ -89,31 +85,3 @@ onIonViewWillEnter(async () => {
   await fetchProcessGroups();
 });
 </script>
-
-<style scoped>
-ion-card>ion-button {
-  margin: var(--spacer-xs);
-}
-
-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  align-items: start;
-}
-
-.user-profile {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
-
-hr {
-  border-top: 1px solid var(--border-medium);
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacer-xs) 10px 0px;
-}
-</style>

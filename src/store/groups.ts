@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { GroupService } from "@/services/GroupService"
 
-
 export const useGroupStore = defineStore('groups', {
     state: () => {
       return {
@@ -31,7 +30,6 @@ export const useGroupStore = defineStore('groups', {
       async fetchProcessByGroups(id: any) {
 				const processByGroups = await GroupService.FetchProcessByGroups(id);
         this.processByGroups = processByGroups;
-				//return Promise.resolve(processByGroups);
 			},
       setCurrentProcessGroup(processGroup: any) {
         this.currentProcessGroup = processGroup;
