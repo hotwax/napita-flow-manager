@@ -2,38 +2,71 @@ import { defineStore } from "pinia";
 import { GroupService } from "@/services/GroupService"
 
 export const useGroupStore = defineStore('groups', {
-    state: () => {
-      return {
-        processGroups: [],
-        processByGroups: {} as any,
-        currentProcessGroup: {},
-				root:'a3229852-0187-1000-8abc-9e42ca1734f2'
-      }
+  state: () => {
+    return {
+      processGroups: [],
+      currentGroupProcesses: {
+        processes: [],
+        connections: []
+      } as any,
+      currentGroup: {},
+    }
+  },
+  getters: {
+    getProcessGroups(state) {
+      return state.processGroups
     },
-    getters: {
-      getProcessGroups(state) {
-        return state.processGroups
-      },
-      getCurrentProcessGroup(state) {
-        return state.currentProcessGroup
-      },
-      getProcessByGroups(state) {
-        return state.processByGroups
-      }
+    getCurrentGroup(state) {
+      return state.currentGroup
     },
-    actions: {
-      async fetchProcessGroups() {
-				const processGroups = await GroupService.FetchProcessGroups(this.root);
-        this.processGroups = processGroups;
-				return Promise.resolve(processGroups);
-			},
-      async fetchProcessByGroups(id: any) {
-				const processByGroups = await GroupService.FetchProcessByGroups(id);
-        this.processByGroups = processByGroups;
-			},
-      setCurrentProcessGroup(processGroup: any) {
-        this.currentProcessGroup = processGroup;
-      },
+    getCurrentGroupProcesses(state) {
+      return state.currentGroupProcesses.processes
     },
-    persist: true,
-  })
+    getCurrentGroupconnections(state) {
+      return state.currentGroupProcesses.connections
+    }
+  },
+  actions: {
+    async fetchProcessGroups() {
+      const processGroups = await GroupService.fetchProcessGroups();
+      const processGroupDetails = processGroups.data.processGroupFlow.flow.processGroups.map((group: any) => ({
+        id: group.id,
+        name: group.component.name,
+        runningCount: group.runningCount,
+        stoppedCount: group.stoppedCount,
+        invalidCount: group.invalidCount,
+        disabledCount: group.disabledCount,
+        inputPortCount: group.inputPortCount,
+        outputPortCount: group.outputPortCount
+      }));
+      this.processGroups = processGroupDetails;
+      return Promise.resolve(processGroups);
+    },
+    async fetchProcessByGroups(id: any) {
+      const processesByGroups = await GroupService.fetchProcessByGroups(id);
+      const processGroupDetails = processesByGroups.data.processGroupFlow.flow.processGroups.map((group: any) => ({
+        id: group.id,
+        name: group.component.name,
+        runningCount: group.runningCount,
+        stoppedCount: group.stoppedCount,
+        invalidCount: group.invalidCount,
+        disabledCount: group.disabledCount,
+        inputPortCount: group.inputPortCount,
+        outputPortCount: group.outputPortCount
+      }));
+      //storing processes in state
+      this.currentGroupProcesses.processes = processGroupDetails;
+
+      const processGroupConnection = processesByGroups.data.processGroupFlow.flow.connections.map((group: any) => ({
+        sourceId: group.component.source.groupId,
+        destinationId: group.component.destination.groupId
+      }));
+      //storing connections in state
+      this.currentGroupProcesses.connections = processGroupConnection
+    },
+    setCurrentProcessGroup(processGroup: any) {
+      this.currentGroup = processGroup;
+    },
+  },
+  persist: true,
+})

@@ -59,29 +59,23 @@ import { useGroupStore } from '../store/groups';
 import { computed, ref } from "vue";
 
 const groupStore = useGroupStore();
-let CurrentProcessGroup = ref('') as any;
-const currentProcessBygroupDetail = computed(() => groupStore.getProcessByGroups)
-CurrentProcessGroup = computed(() => groupStore.getCurrentProcessGroup);
-const processGroups = groupStore.getProcessGroups;
+const currentProcessBygroupDetail = computed(() => groupStore.getCurrentGroupProcesses)
+const CurrentProcessGroup = computed(() => groupStore.getCurrentGroup);
+const processGroups = computed(() =>groupStore.getProcessGroups);
 
-async function fetchProcessGroups() {
-  await groupStore.fetchProcessGroups();
-}
-
-async function fetchProcessByGroups(groupId: string) {
-  await groupStore.fetchProcessByGroups(groupId);
+async function fetchProcessByGroups(id: string) {
+  await groupStore.fetchProcessByGroups(id);
 }
 
 async function onProcessGroupChange(group: any) {
   const selectedProcessGroupId = group.id
-  const selectedProcessGroup = processGroups.find(group => group.id === selectedProcessGroupId);
-
+  const selectedProcessGroup = processGroups.value.find((group: any) => group.id === selectedProcessGroupId);
   groupStore.setCurrentProcessGroup(selectedProcessGroup);
   // Fetch and display process details for the selected group
   await fetchProcessByGroups(selectedProcessGroupId); 
 }
 
 onIonViewWillEnter(async () => {
-  await fetchProcessGroups();
+  await groupStore.fetchProcessGroups();
 });
 </script>

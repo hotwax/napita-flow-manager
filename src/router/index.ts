@@ -46,7 +46,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Tabs,
     children: [
       {
-        path: 'process',
+        path: 'group',
         component: () => import('@/views/groups.vue'),
       },{
         path: 'settings',
