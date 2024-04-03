@@ -2,7 +2,6 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-menu-button slot="start" />
         <ion-title>{{ translate("Napita Flow Manager") }}</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -14,7 +13,6 @@
           <ion-list>
             <ion-item v-for="group in processGroups" :key="group?.id" button detail @click="onProcessGroupChange(group)">
               <ion-label :color="group.id === currentProcessGroup?.id ? 'primary' : ''">
-                <!-- <p class="overline">{{ group.id }}</p> -->
                 {{ group.name }}
               </ion-label>
             </ion-item>
@@ -32,13 +30,13 @@
           <hr />
           <div v-if="currentGroupProcesses.length">
             <ion-accordion-group>
-                <ion-accordion v-for="(process, index) in currentGroupProcesses" :key="index" >
-                  <ion-item slot="header">
-                    <ion-label class="ion-text-wrap">
-                      {{ process.name }}
-                    </ion-label>
-                  </ion-item>
-                </ion-accordion>
+              <ion-accordion v-for="(process, index) in currentGroupProcesses" :key="index" >
+                <ion-item slot="header">
+                  <ion-label class="ion-text-wrap">
+                    {{ process.name }}
+                  </ion-label>
+                </ion-item>
+              </ion-accordion>
             </ion-accordion-group>
           </div>
           <div v-else class="empty-state" >
@@ -57,15 +55,16 @@ import { useGroupStore } from '@/store/groups';
 import { computed } from "vue";
 
 const groupStore = useGroupStore();
+
 const currentGroupProcesses = computed(() => groupStore.getCurrentGroupProcesses)
 const currentProcessGroup = computed(() => groupStore.getCurrentGroup);
 const processGroups = computed(() =>groupStore.getProcessGroups);
 
 async function onProcessGroupChange(group: any) {
   const selectedProcessGroupId = group.id
+
   const selectedProcessGroup = processGroups.value.find((group: any) => group.id === selectedProcessGroupId);
   groupStore.setcurrentProcessGroup(selectedProcessGroup);
-  // Fetch and display process details for the selected group
   await groupStore.fetchProcessByGroups(selectedProcessGroupId);
 }
 

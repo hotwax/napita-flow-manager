@@ -30,10 +30,10 @@ export const useGroupStore = defineStore('groups', {
   },
   actions: {
     async fetchProcessGroups() {
-      try{
+      try {
         const resp = await GroupService.fetchProcessGroups();
         if (!hasError(resp) && resp.data) {
-          const processGroupDetails = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
+          const processGroups = resp.data.processGroupFlow.flow.processGroups.map((group: any) => ({
             id: group.id,
             name: group.component.name,
             runningCount: group.runningCount,
@@ -43,8 +43,8 @@ export const useGroupStore = defineStore('groups', {
             inputPortCount: group.inputPortCount,
             outputPortCount: group.outputPortCount
           }));
-          
-          this.processGroups = processGroupDetails;
+          processGroups.sort((a:any, b: any) => a.name.localeCompare(b.name));
+          this.processGroups = processGroups;
         } else {
           throw resp.data
         }
@@ -71,6 +71,8 @@ export const useGroupStore = defineStore('groups', {
             sourceId: group.component.source.groupId,
             destinationId: group.component.destination.groupId
           }));
+
+          processes.sort((a:any, b: any) => a.name.localeCompare(b.name));
           this.currentGroupProcesses.processes = processes;
           this.currentGroupProcesses.connections = connections;
         } else {

@@ -1,22 +1,16 @@
-import { useUserStore } from '@/store/user'
 import api from "@/api"
-
-const userStore = useUserStore();
-const baseURL = userStore.getBaseUrl;
 
 const fetchProcessGroups = async (): Promise<any> => {
   return api({
     url: "flow/process-groups/root",
-    method: "GET",
-    baseURL,
+    method: "GET"
   })
 }
 
-const fetchProcessByGroups = async (root: any): Promise<any> => {
+const fetchProcessByGroups = async (groupId: any): Promise<any> => {
   return api({
-    url: `flow/process-groups/${root}`,
-    method: "GET",
-    baseURL,
+    url: `flow/process-groups/${groupId}`,
+    method: "GET"
   })
 }
 
