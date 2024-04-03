@@ -38,7 +38,6 @@ const fetchExpirationTime = async (): Promise<any> => {
   } catch (err) {
     return Promise.reject("Sorry, login failed. Please try again");
   }
-
 }
 
 const logout = async (): Promise<any> => {

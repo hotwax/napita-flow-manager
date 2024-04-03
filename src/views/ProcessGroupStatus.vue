@@ -107,7 +107,6 @@ async function updateProcessStatus(process: any) {
 }
 
 async function processGroupStatus() {
-	console.log(currentProcessGroupDetail.value);
 
 	if (currentProcessGroupDetail) {
 		currentProcessGroupDetail.value.map(async (process: any) => {

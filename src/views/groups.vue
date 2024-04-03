@@ -1,261 +1,119 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
+    <ion-header @ionViewWillEnter="fetchProcessGroupData" :translucent="true">
       <ion-toolbar>
-        <ion-title>{{ translate("Napita flow Manager") }}</ion-title>
-        // may be select option 
+        <ion-menu-button slot="start" />
+        <ion-title>Napita Flow Manager</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <div class="find">
+      <div class="group">
         <aside>
           <h1>{{ translate("Process Groups") }}</h1>
-
           <ion-list>
-            <ion-item v-for="group in securityGroups" :key="group?.groupId" button detail @click="updateCurrentGroup(group)">
-              <ion-label :color="group.groupId === currentGroup?.groupId ? 'primary' : ''">
-                <p class="overline">{{ group.groupId }}</p>
-                {{ group?.groupName }}
+            <ion-item v-for="group in processGroups" :key="group?.id" button detail @click="onProcessGroupChange(group)">
+              <ion-label :color="group.id === CurrentProcessGroup?.id ? 'primary' : ''">
+                <!-- <p class="overline">{{ group.id }}</p> -->
+                {{ group.name }}
               </ion-label>
             </ion-item>
           </ion-list>
         </aside>
-        <main v-if="currentGroup?.groupId">
-          <div class="section-header">
+
+        <main v-if="CurrentProcessGroup?.id">
+          <div>
             <ion-item lines="none">
-              <ion-icon :icon="idCardOutline" slot="start" />
               <ion-label>
-                <ion-note class="overline">{{ currentGroup.groupId }}</ion-note>
-                <h1>{{ currentGroup.groupName }}</h1>
-                <p class="ion-text-wrap">{{ currentGroup.description }}</p>
+                <ion-note class="overline">{{ CurrentProcessGroup.id }}</ion-note>
+                <h1>{{ CurrentProcessGroup.name }}</h1>
               </ion-label>
-              <ion-button slot="end" @click="editSecurityGroup()" fill="outline">{{ translate("Edit") }}</ion-button>
             </ion-item>
-            <ion-button v-if="securityGroupUsers[currentGroup.groupId]" fill="clear" color="medium" @click="openCurrentGroupUsers()">
-              {{ translate(securityGroupUsers[currentGroup.groupId] > 1 ? "users" : "user", { userCount: securityGroupUsers[currentGroup.groupId] }) }}
-              <ion-icon :icon="openOutline" slot="end" />
-            </ion-button>
           </div>
-          <hr />
-          <PermissionItems />
+          <div>
+            <ion-accordion-group>
+              <ion-radio-group >
+                <ion-accordion v-for="(process, index) in currentProcessBygroupDetail" :key="index" >
+                  <ion-item slot="header">
+                    <ion-label class="ion-text-wrap">
+                      {{ process.name }}
+                    </ion-label>
+                  </ion-item>
+                  <div class="ion-padding" slot="content">
+                    
+                  </div>
+                </ion-accordion>
+              </ion-radio-group>
+            </ion-accordion-group>
+          </div>
         </main>
-        <main v-else class="empty-state">
-          <p>{{ "Select a security group to view its details" }}</p>
-        </main>
+        <!-- <main v-else class="empty-state">
+          <p>{{ "Select a process group to view its details" }}</p>
+        </main> -->
       </div>
     </ion-content>
   </ion-page>
 </template>
 
-<script lang="ts">
-import {
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonNote,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  alertController,
-  modalController
-} from '@ionic/vue';
-import { defineComponent } from 'vue';
-import { translate } from '@hotwax/dxp-components';
-import { addOutline, downloadOutline, idCardOutline, openOutline } from 'ionicons/icons';
-import { useRouter } from 'vue-router';
-import logger from '../logger';
+<script setup lang="ts">
+import { IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, onIonViewWillEnter, IonButton } from "@ionic/vue";
+import { translate } from "../i18n"
+import { useGroupStore } from '../store/groups';
+import { computed, ref } from "vue";
 
-export default defineComponent({
-  name: 'Permissions',
-  components: {
-    IonButton,
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonIcon,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonNote,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-    PermissionItems
-  },
-  data() {
-    return {
-      securityGroupUsers: {} as any
-    }
-  },
-  computed: {
-    ...mapGetters({
-      securityGroups: 'util/getSecurityGroups',
-      permissionsByClassificationGroups: 'permission/getPermissionsByClassificationGroups',
-      currentGroupPermissions: 'permission/getCurrentGroupPermissions',
-      currentGroup: 'permission/getCurrentGroup',
-      allPermissions: 'permission/getAllPermissions'
-    })
-  },
-  async mounted() {
-    await this.store.dispatch('util/getSecurityGroups')
-    if(!this.allPermissions.length) await this.store.dispatch('permission/getAllPermissions')
-    if(!Object.keys(this.permissionsByClassificationGroups).length) await this.store.dispatch('permission/getPermissionsByClassificationGroups')
-    if(this.currentGroup.groupId) await this.store.dispatch('permission/getPermissionsByGroup', this.currentGroup.groupId)
-  },
-  methods: {
-    createGroup() {
-      this.$router.replace({ path: `/create-security-group/` })
-    },
-    async updateCurrentGroup(group: any) {
-      emitter.emit('presentLoader')
-      await this.store.dispatch('permission/updateCurrentGroup', group)
-      await this.store.dispatch('permission/getPermissionsByGroup', this.currentGroup.groupId)
-      await this.store.dispatch('permission/checkAssociated')
-      await this.getUsersCount()
-      await this.store.dispatch('permission/updateQuery', {queryString: '', showAllSelected: false})
-      emitter.emit('dismissLoader')
-    },
-    async editSecurityGroup() {
-      const editSecurityGroupModal = await modalController.create({
-        component: EditSecurityGroupModal
-      })
+const groupStore = useGroupStore();
+let CurrentProcessGroup = ref('') as any;
+const currentProcessBygroupDetail = computed(() => groupStore.getProcessByGroups)
+CurrentProcessGroup = computed(() => groupStore.getCurrentProcessGroup);
+const processGroups = groupStore.getProcessGroups;
 
-      editSecurityGroupModal.present()
-    },
-    async getUsersCount() {
-      if(this.securityGroupUsers[this.currentGroup.groupId]) {
-        return;
-      }
+function fetchProcessGroups() {
+  return groupStore.fetchProcessGroups();
+}
 
-      try {
-        const resp = await PermissionService.getSecurityGroupUsers({
-          entityName: "UserLoginAndSecurityGroup",
-          distinct: "Y",
-          noConditionFind: "Y",
-          filterByDate: "Y",
-          viewSize: 100,
-          inputFields: {
-            groupId: this.currentGroup.groupId
-          }
-        })
+async function fetchProcessByGroups(groupId: string) {
+  await groupStore.fetchProcessByGroups(groupId);
 
-        if(!hasError(resp)) {
-          this.securityGroupUsers[this.currentGroup.groupId] = resp.data.count
-        } else {
-          throw resp.data;
-        }
-      } catch(err) {
-        logger.error(err)
-      }
-    },
-    async openCurrentGroupUsers() {
-      await this.store.dispatch('user/updateQuery', {queryString: '', securityGroup: this.currentGroup.groupId, status: '', hideDisabledUser: true})
-      this.router.replace('users')
-    },
-    async downloadCSVForPermissions() {
-      if(this.currentGroup.groupId && !Object.keys(this.currentGroupPermissions).length) {
-        const alert = await alertController.create({
-          header: translate("No permissions associated"),
-          message: translate("No permissions have been linked to this group yet. Permissions for a group cannot be downloaded."),
-          buttons: [
-            {
-              text: translate("Dismiss"),
-              role: "cancel"
-            }
-          ],
-        });
-        return alert.present();
-      }
+}
 
-      let permissionsJson = [] as any
+async function onProcessGroupChange(group: any) {
+  const selectedProcessGroupId = group.id
+  const selectedProcessGroup = processGroups.find(group => group.id === selectedProcessGroupId);
 
-      if(this.currentGroup.groupId) {
-        Object.values(this.currentGroupPermissions).map((permission: any) => {
-          permissionsJson.push({
-            "Group ID": permission.groupId,
-            "Permission ID": permission.permissionId,
-            "Permission Desc": permission.description,
-            "Member Created Date": DateTime.fromMillis(permission.fromDate).toFormat('dd-MM-yyyy')
-          })
-        })
-      } else {
-        permissionsJson =  await this.downloadCSVForAllPermissionsCSV()
-      }
+  groupStore.setCurrentProcessGroup(selectedProcessGroup);
+  // Fetch and display process details for the selected group
+  await fetchProcessByGroups(selectedProcessGroupId); 
+}
 
-      const fileName = `HotWaxSecurityGroupExport_${DateTime.now().toFormat('yyyy_MM_dd_HH:mm')}`
-
-      await jsonToCsv(permissionsJson, { download: true, name: fileName })
-    },
-    async downloadCSVForAllPermissionsCSV() {
-     let permissionsByGroup = [] as any;
-
-      try {
-        await Promise.allSettled(this.securityGroups.map(async (group: any) => {
-          let viewIndex = 0, resp;
-          do {
-            resp = await PermissionService.getPermissionsByGroup({
-              entityName: "SecurityGroupAndPermission",
-              distinct: "Y",
-              noConditionFind: "Y",
-              filterByDate: "Y",
-              viewSize: 250,
-              viewIndex: viewIndex,
-              inputFields: {
-                groupId: group.groupId
-              }
-            });
-
-            if (!hasError(resp) && resp.data.count) {
-              resp.data.docs.map((permission: any) => {
-                permissionsByGroup.push({
-                  "Group Id": permission.groupId,
-                  "Permission ID": permission.permissionId,
-                  "Permission Desc": permission.description,
-                  "Member Created Date": DateTime.fromMillis(permission.fromDate).toFormat('dd-MM-yyyy')
-                });
-              });
-              viewIndex++;
-            } else {
-              throw resp.data;
-            }
-          } while (resp.data.docs.length >= 250);
-        }));
-      } catch (err) {
-        logger.error(err);
-      }
-
-      return permissionsByGroup;
-    }
-  },
-  setup() {
-    const router = useRouter();
-    const store = useStore();
-
-    return {
-      Actions,
-      addOutline,
-      downloadOutline,
-      hasPermission,
-      idCardOutline,
-      openOutline,
-      router,
-      store,
-      translate
-    }
-  }
+onIonViewWillEnter(async () => {
+  await fetchProcessGroups();
 });
 </script>
 
 <style scoped>
+ion-card>ion-button {
+  margin: var(--spacer-xs);
+}
+
+section {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  align-items: start;
+}
+
+.user-profile {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+hr {
+  border-top: 1px solid var(--border-medium);
+}
+
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: var(--spacer-xs) 10px 0px;
 }
 </style>

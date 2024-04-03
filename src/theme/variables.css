@@ -279,6 +279,20 @@ http://ionicframework.com/docs/theming/ */
   }
 }
 
+.group {
+  display: grid;
+  grid-template-areas: "search"
+                       "main";
+}
+
+.group > .filters{
+  display: none;
+}
+
+.group > main {
+  grid-area: main;
+}
+
 @media (prefers-color-scheme: dark) {
   ion-chip > ion-icon {
     color: var(--ion-color-dark);
@@ -291,4 +305,35 @@ http://ionicframework.com/docs/theming/ */
   ion-item {
     --border-color: var(--ion-color-medium)
   }
+}
+
+@media (min-width: 991px) {
+  .group {
+    grid: "search  main" min-content
+          "filters main" 1fr
+          / 375px;
+    column-gap: var(--spacer-2xl);
+    margin: var(--spacer-lg);
+  }
+
+  .filters {
+    margin-top: var(--spacer-lg);
+  }
+
+  .filters {
+    margin-top: var(--spacer-lg);
+  }
+
+  .group > .filters{
+    display: unset;
+  }
+
+  .desktop-only {
+    display: unset;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
 }
