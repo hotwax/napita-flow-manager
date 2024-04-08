@@ -52,7 +52,7 @@ export const useGroupStore = defineStore('groups', {
         logger.error(error)
       }
     },
-    async fetchProcessByGroups(id: any) {
+    async fetchProcessByGroups(id: string) {
       try{
         const resp = await GroupService.fetchProcessByGroups(id);
         if (!hasError(resp) && resp.data) {
@@ -82,7 +82,7 @@ export const useGroupStore = defineStore('groups', {
         logger.error(error)
       }
     },
-    setcurrentProcessGroup(processGroup: any) {
+    setCurrentProcessGroup(processGroup: any) {
       this.currentGroup = processGroup;
     },
   },

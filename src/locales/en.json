@@ -11,6 +11,7 @@
   "Login": "Login",
   "Logout": "Logout",
   "No time zone found": "No time zone found",
+  "No process found for": "No process found for {name}"
   "OMS": "OMS",
   "Password":  "Password",
   "Process Groups": "Process Groups",

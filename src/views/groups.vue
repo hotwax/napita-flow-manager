@@ -40,7 +40,7 @@
             </ion-accordion-group>
           </div>
           <div v-else class="empty-state" >
-            <p>No process found for {{ currentProcessGroup.name }} .</p>
+            <p>{{ translate("No process found for", { name: currentProcessGroup.name }) }}</p>
           </div>
         </main>
       </div>
@@ -57,14 +57,14 @@ import { computed } from "vue";
 const groupStore = useGroupStore();
 
 const currentGroupProcesses = computed(() => groupStore.getCurrentGroupProcesses)
-const currentProcessGroup = computed(() => groupStore.getCurrentGroup);
-const processGroups = computed(() =>groupStore.getProcessGroups);
+const currentProcessGroup = computed(() => groupStore.getCurrentGroup) as any;
+const processGroups = computed(() => groupStore.getProcessGroups);
 
 async function onProcessGroupChange(group: any) {
   const selectedProcessGroupId = group.id
 
   const selectedProcessGroup = processGroups.value.find((group: any) => group.id === selectedProcessGroupId);
-  groupStore.setcurrentProcessGroup(selectedProcessGroup);
+  groupStore.setCurrentProcessGroup(selectedProcessGroup);
   await groupStore.fetchProcessByGroups(selectedProcessGroupId);
 }
 
