@@ -46,7 +46,7 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: 'groups',
-        component: () => import('@/views/groups.vue'),
+        component: () => import('@/views/Groups.vue'),
       },{
         path: 'settings',
         component: () => import('@/views/Settings.vue')
