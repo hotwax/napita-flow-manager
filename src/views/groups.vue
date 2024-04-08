@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonAccordion, IonAccordionGroup, IonContent, IonHeader, IonItem, IonLabel, IonList, IonMenuButton, IonNote, IonPage, IonTitle, IonToolbar, onIonViewWillEnter } from "@ionic/vue";
+import { IonAccordion, IonAccordionGroup, IonContent, IonHeader, IonItem, IonLabel, IonList, IonNote, IonPage, IonTitle, IonToolbar, onIonViewWillEnter } from "@ionic/vue";
 import { translate } from "@/i18n"
 import { useGroupStore } from '@/store/groups';
 import { computed } from "vue";
