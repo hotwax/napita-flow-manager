@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import Settings from "@/views/Settings.vue"
 import { useUserStore } from '@/store/user';
 import 'vue-router'
 import Login from "@/views/Login.vue"
+import Tabs from '@/components/Tabs.vue';
 
 // Defining types for the meta values
 declare module 'vue-router' {
@@ -32,7 +32,7 @@ const authGuard = (to: any, from: any, next: any) => {
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/settings'
+    redirect: '/tabs/settings'
   },
   {
     path: '/login',
@@ -41,10 +41,18 @@ const routes: Array<RouteRecordRaw> = [
     beforeEnter: loginGuard
   },
   {
-    path: "/settings",
-    name: "Settings",
-    component: Settings,
-    beforeEnter: authGuard
+    path: '/tabs',
+    component: Tabs,
+    children: [
+      {
+        path: 'groups',
+        component: () => import('@/views/Groups.vue'),
+      },{
+        path: 'settings',
+        component: () => import('@/views/Settings.vue')
+      },
+    ],
+    beforeEnter: authGuard,
   }
 ]
 

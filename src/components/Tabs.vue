@@ -2,8 +2,12 @@
   <ion-page>
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
-      <ion-tab-bar slot="bottom" v-if="showFooter()">
-        <ion-tab-button tab="more" href="/tabs/settings">
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="groups" href="/tabs/groups">
+          <ion-icon :icon="albumsOutline" />
+          <ion-label>{{ translate("Groups") }}</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="settings" href="/tabs/settings">
           <ion-icon :icon="settingsOutline" />
           <ion-label>{{ translate("Settings") }}</ion-label>
         </ion-tab-button>
@@ -13,17 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import { translate } from "../i18n";
+import { translate } from "@/i18n";
 import { IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/vue";
-import { settingsOutline } from "ionicons/icons";
-import { useRouter } from "vue-router";
+import { albumsOutline, settingsOutline } from "ionicons/icons";
 
-const router = useRouter();
-
-function showFooter() {
-  if (['/tabs/settings'].includes(router.currentRoute.value.path)) return true
-  return false
-}
 </script>
 
 <style scoped>

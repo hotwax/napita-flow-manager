@@ -33,7 +33,7 @@ import {
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from '@/store/user';
-import { translate } from "../i18n";
+import { translate } from "@/i18n";
 
 const username = ref("")
 const password = ref("")
